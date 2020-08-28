@@ -89,9 +89,9 @@ To create a new Mbed OS project in a specified path:
     - Absolute. `init` will create the folder if it doesn't exist.
     - Relative:
 
-    If you have already created a project folder, you can use `.`
+        If you have already created a project folder, you can use `.`
 
-    If you want the `init` command to create a project folder, use `.\<folder-name>`.
+        If you want the `init` command to create a project folder, use `.\<folder-name>`.
 
 ### Use an example application
 
@@ -187,7 +187,9 @@ Use CMake to build your application:
     cmake --build cmake_build
     ```
 
-    This generates two files in the build output directory (`cmake_build` in this example): HEX and BIN. <!--find a place where we explain where HEX is useful and link to it-->.
+    This generates two files in the build output directory (`cmake_build` in this example): HEX and BIN. 
+    
+    Which format you flash to your device depends on your requirements. For example, use the BIN file if you want to completely replace the contents of the flash device. If you want to retain some of the flash devices contents, you'll need to flash to an address other than the flash's starting address, so you'll need to use the HEX file (which contains the starting address). Note that we assume your board is running DAPLink for flash programming. If you are using another tool, please check your tool's documentation for file type support.
 
 1. Drag and drop the generated file to your board.
 
