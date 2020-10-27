@@ -89,9 +89,15 @@ To create a new Mbed OS project in a specified path:
     - Absolute. `init` will create the folder if it doesn't exist.
     - Relative:
 
-        If you have already created a project folder, you can use `.`
+    If you have already created a project folder, you can use `.`
 
-        If you want the `init` command to create a project folder, use `.\<folder-name>`.
+    If you want the `init` command to create a project folder, use `.\<folder-name>`.
+
+- To create a project without downloading a copy of Mbed OS (reuse an existing copy):
+
+    ```
+    mbed-tools init -c <PATH>
+    ```
 
 ### Use an example application
 
@@ -102,7 +108,7 @@ mbed-tools clone <example> <PATH>
 ````
 
 - [mbed-os-example-blinky](https://github.com/ARMmbed/mbed-os-example-blinky)
-- [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE button example.
+- [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE LED example.
 - [mbed-os-example-cellular](https://github.com/ARMmbed/mbed-os-example-cellular)
 - [mbed-os-example-devicekey](https://github.com/ARMmbed/mbed-os-example-devicekey)
 - [mbed-os-example-kvstore](https://github.com/ARMmbed/mbed-os-example-kvstore)
@@ -129,9 +135,21 @@ Mbed Tools has two environment variables that you can set for a project:
     - `ONLINE`: Alway use the online database.
     - `OFFLINE`: Always use the offline database.
 
-To set values, create an `.env` file in the root directory of the project. The file should contain definitions in the `<VARIABLE>=<value>` format.
+These variables can be set either directly via environment variables
+or using a `.env` file containing the variable definitions as follows:
 
-For more information, use `mbed-tools env`
+```
+VARIABLE1=<value>
+VARIABLE2=<value>
+```
+
+Environment variables take precedence, meaning the values set in the file will be overriden
+by any values previously set in your environment.
+
+**Warning**:
+Do not upload `.env` files containing private tokens to version control.
+If you use this package as a dependency of your project, please ensure to include the
+`.env` in your `.gitignore`.
 
 ### Mbed OS configuration
 
@@ -187,11 +205,45 @@ Use CMake to build your application:
     cmake --build cmake_build
     ```
 
-    This generates two files in the build output directory (`cmake_build` in this example): HEX and BIN. 
-    
+    This generates two files in the build output directory (`cmake_build` in this example): HEX and BIN.
+
     Which format you flash to your device depends on your requirements. For example, use the BIN file if you want to completely replace the contents of the flash device. If you want to retain some of the flash devices contents, you'll need to flash to an address other than the flash's starting address, so you'll need to use the HEX file (which contains the starting address). Note that we assume your board is running DAPLink for flash programming. If you are using another tool, please check your tool's documentation for file type support.
 
 1. Drag and drop the generated file to your board.
+
+
+## Mbed OS Configuration and building the project
+
+We can use a single command which will configure (set up your target and toolchain) and build the project.
+
+1. To build and configure:
+
+    ```
+    mbed-tools build -m <target> -t <toolchain>
+    ```
+    - -t: The toolchain you are using to build your app
+    - -m: A build target for an Mbed-enabled device
+
+    Example for FRDM-K64F and GCC:
+
+    ```
+    mbed-tools build -m K64F -t GCC_ARM
+    ```
+
+1. To perform an iterative build on previously configured target:
+
+    ```
+    mbed-tools build
+    ```
+
+
+## List library dependencies of an application
+
+All library dependencies can be listed with their URL and Git references as follows:
+
+```
+mbed-tools libs
+```
 
 ## Logging
 
